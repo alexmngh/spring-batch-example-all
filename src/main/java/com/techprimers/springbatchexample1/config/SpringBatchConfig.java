@@ -1,6 +1,7 @@
 package com.techprimers.springbatchexample1.config;
 
 import com.techprimers.springbatchexample1.model.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -21,6 +22,7 @@ import org.springframework.core.io.FileSystemResource;
 
 @Configuration
 @EnableBatchProcessing
+@Slf4j
 public class SpringBatchConfig {
 
     @Bean
@@ -32,7 +34,7 @@ public class SpringBatchConfig {
     ) {
 
         Step step = stepBuilderFactory.get("ETL-file-load")
-                .<User, User>chunk(100)
+                .<User, User>chunk(5)
                 .reader(itemReader)
                 .processor(itemProcessor)
                 .writer(itemWriter)
@@ -45,8 +47,17 @@ public class SpringBatchConfig {
                 .build();
     }
 
-    @Bean
-    public FlatFileItemReader<User> itemReader() {
+  /**
+   * Это одна из стандартных реализаций ItemReader
+   * @return
+   */
+  @Bean
+  public FlatFileItemReader<User> itemReader() {
+//    System.out.println("itemReader: Start");
+
+    log.info("itemReader: Start");
+
+
 
         FlatFileItemReader<User> flatFileItemReader = new FlatFileItemReader<>();
         flatFileItemReader.setResource(new FileSystemResource("src/main/resources/users.csv"));
@@ -54,7 +65,7 @@ public class SpringBatchConfig {
         flatFileItemReader.setLinesToSkip(1);
         flatFileItemReader.setLineMapper(lineMapper());
         return flatFileItemReader;
-    }
+  }
 
     @Bean
     public LineMapper<User> lineMapper() {

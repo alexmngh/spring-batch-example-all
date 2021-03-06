@@ -23,7 +23,11 @@ public class LoadController {
     @Autowired
     Job job;
 
-    @GetMapping
+  @Autowired
+  Job jobFile;
+
+
+  @GetMapping
     public BatchStatus load() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
 
 
@@ -34,11 +38,42 @@ public class LoadController {
 
         System.out.println("JobExecution: " + jobExecution.getStatus());
 
-        System.out.println("Batch is Running...");
+      System.out.println("JobExecution: " + jobExecution
+          .getJobParameters().getParameters().toString());
+
+
+
+      System.out.println("Batch is Running...");
         while (jobExecution.isRunning()) {
             System.out.println("...");
         }
+        System.out.println("end load");
 
         return jobExecution.getStatus();
     }
+
+  @GetMapping("/file")
+  public void loadFile() throws JobParametersInvalidException, JobExecutionAlreadyRunningException,
+      JobRestartException, JobInstanceAlreadyCompleteException {
+
+    Map<String, JobParameter> maps = new HashMap<>();
+    maps.put("time", new JobParameter(System.currentTimeMillis()));
+    JobParameters parameters = new JobParameters(maps);
+    JobExecution jobExecution = jobLauncher.run(jobFile, parameters);
+
+    System.out.println("JobExecution 2: " + jobExecution.getStatus());
+
+    System.out.println("JobExecution: " + jobExecution
+        .getJobParameters().getParameters().toString());
+
+
+
+    System.out.println("Batch is Running...");
+    while (jobExecution.isRunning()) {
+      System.out.println("...");
+    }
+    System.out.println("end load");
+
+  }
+
 }

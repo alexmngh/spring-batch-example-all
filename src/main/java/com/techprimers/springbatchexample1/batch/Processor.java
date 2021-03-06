@@ -1,6 +1,7 @@
 package com.techprimers.springbatchexample1.batch;
 
 import com.techprimers.springbatchexample1.model.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class Processor implements ItemProcessor<User, User> {
 
     private static final Map<String, String> DEPT_NAMES =
@@ -27,6 +29,7 @@ public class Processor implements ItemProcessor<User, User> {
         user.setDept(dept);
         user.setTime(new Date());
         System.out.println(String.format("Converted from [%s] to [%s]", deptCode, dept));
+      log.info("ItemProcessor: process");
         return user;
     }
 }
