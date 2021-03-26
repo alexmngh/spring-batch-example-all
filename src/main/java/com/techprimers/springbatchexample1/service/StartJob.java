@@ -2,6 +2,7 @@ package com.techprimers.springbatchexample1.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
@@ -21,12 +22,12 @@ public class StartJob {
   JobLauncher jobLauncherList;
 
   @Autowired
-  Job jobDeveloperMany;
+  Job jobDeveloper;
 
 
   @Scheduled(fixedRate = 15000, initialDelay = 20000)
   public void launchJob() throws Exception {
-    log.info("launchJob");
+    log.info("start - -- launchJob ");
 
     /*
     Map<String, JobParameter> maps = new HashMap<>();
@@ -47,10 +48,29 @@ public class StartJob {
 
      */
 
+    UUID numberId = new UUID(25L, 37L);
+    log.info("numberId = " + numberId);
+
+
     JobParameters params = new JobParametersBuilder()
         .addString("JobID", String.valueOf(System.currentTimeMillis()))
+        .addString("UUID", numberId.toString())
         .toJobParameters();
-    jobLauncherList.run(jobDeveloperMany, params);
+//    jobLauncherList.run(jobDeveloper, params);
+
+    JobExecution jobExecution = jobLauncherList.run(jobDeveloper, params);
+
+
+    log.info("JobExecution ==: " + jobExecution
+        .getJobParameters().getParameters().toString());
+
+
+    log.info("JobExecution: UUID == " + jobExecution
+        .getJobParameters().getParameters().get("UUID").toString());
+
+
   }
+
+
 
 }

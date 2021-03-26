@@ -49,7 +49,7 @@ public class SpringDeveloperManyBatchConfig {
   public Job jobDeveloperMany() {
     return jobBuilderFactory.get("jobDeveloperMany")
         .start(step1())
-        .next(step2())
+//        .next(step2())
         .incrementer(new RunIdIncrementer())
         .build();
   }
@@ -58,8 +58,8 @@ public class SpringDeveloperManyBatchConfig {
   public Step step1() {
     return stepBuilderFactory.get("step1")
         .<Integer, Integer>chunk(3)
-        .reader(itemReaderDeveloper())
-        .writer(itemWriterDeveloper())
+        .reader(itemReaderDeveloperMany())
+        .writer(itemWriterDeveloperMany())
         .listener(new StepExecutionListenerSupport() {
           @Override
           public ExitStatus afterStep(StepExecution stepExecution) {
@@ -90,7 +90,7 @@ public class SpringDeveloperManyBatchConfig {
 
   @Bean
   @StepScope
-  public ListItemReader<Integer> itemReaderDeveloper() {
+  public ListItemReader<Integer> itemReaderDeveloperMany() {
     List<Integer> items = new LinkedList<>();
     for (int i = 0; i < random.nextInt(100); i++) {
       items.add(i);
@@ -100,7 +100,7 @@ public class SpringDeveloperManyBatchConfig {
   }
 
   @Bean
-  public ItemWriter<Integer> itemWriterDeveloper() {
+  public ItemWriter<Integer> itemWriterDeveloperMany() {
     return items -> {
       for (Integer item: items) {
         int nextInt = random.nextInt(1000);

@@ -35,8 +35,8 @@ public class SpringDeveloperBatchConfig {
   private JobBuilderFactory jobBuilderFactory;
   private StepBuilderFactory stepBuilderFactory;
 
-  @Autowired
-  EmailCreateService emailCreateService;
+//  @Autowired
+//  EmailCreateService emailCreateService;
 
   public SpringDeveloperBatchConfig(JobBuilderFactory jobBuilderFactory,
                                     StepBuilderFactory stepBuilderFactory) {
